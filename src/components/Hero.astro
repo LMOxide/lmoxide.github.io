@@ -1,0 +1,198 @@
+---
+import { Image } from "astro:assets"
+import shot from "../data/images/enchanted-forest.jpg"
+import { site } from "../data/site"
+
+const stats = [
+  ["Rust", "8 crates, one workspace"],
+  ["2", "clients: Windows and native Linux"],
+  ["ed25519", "signed patch manifests"],
+  ["OpenAPI 3.1", "REST API for tools and bots"],
+]
+---
+
+<section class="hero" id="top">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="container inner">
+    <div class="copy">
+      <p class="kicker">LEGO Minifigures Online · server</p>
+      <h1>Bringing LEGO Minifigures Online <span class="hl">back online</span>.</h1>
+      <p class="lead">
+        LMOxide is a server for the LEGO Minifigures Online client, which Funcom shut down in 2016.
+        It is written in Rust and reverse-engineered from the shipped client: the game server, a
+        REST API with a web console, and a patcher that installs and starts the game.
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#get-started">Get started</a>
+        <a class="btn" href={site.repos.server}>View the source</a>
+      </div>
+    </div>
+
+    <figure class="window">
+      <div class="titlebar">
+        <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="mono">LMO · Enchanted Forest · 127.0.0.1:7100</span>
+      </div>
+      <Image
+        src={shot}
+        alt="A minifigure on the icy cliffs of the Enchanted Forest, running on an LMOxide server"
+        widths={[640, 960]}
+        sizes="(max-width: 960px) 100vw, 560px"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <div class="stripe" aria-hidden="true"><span></span><span></span><span></span></div>
+    </figure>
+  </div>
+
+  <div class="container">
+    <dl class="stats">
+      {
+        stats.map(([value, label]) => (
+          <div>
+            <dt class="mono">{value}</dt>
+            <dd>{label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding: clamp(56px, 9vw, 104px) 0 56px;
+    overflow: hidden;
+  }
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, #000 20%, transparent 75%);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .grid-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px 300px at 75% 20%, rgba(61, 139, 253, 0.16), transparent 70%);
+  }
+  .inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+  }
+  h1 {
+    font-size: clamp(36px, 5.6vw, 60px);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+  }
+  .hl {
+    background: linear-gradient(90deg, var(--yellow), #ff9d1a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .window {
+    margin: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--panel);
+    box-shadow:
+      0 30px 80px -20px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    transform: perspective(1400px) rotateY(-4deg) rotateX(2deg);
+  }
+  .titlebar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 36px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--text-faint);
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+  .window img {
+    width: 100%;
+    aspect-ratio: 960 / 530;
+    object-fit: cover;
+  }
+  .stats {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: clamp(48px, 7vw, 80px) 0 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--bg-raised) 85%, transparent);
+  }
+  .stats div {
+    padding: 20px 22px;
+  }
+  .stats div + div {
+    border-left: 1px solid var(--line);
+  }
+  dt {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  dd {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+  @media (max-width: 960px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+    .window {
+      transform: none;
+    }
+    .stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .stats div:nth-child(3) {
+      border-left: 0;
+    }
+    .stats div:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+  }
+  @media (max-width: 420px) {
+    .stats {
+      grid-template-columns: 1fr;
+    }
+    .stats div + div {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+</style>

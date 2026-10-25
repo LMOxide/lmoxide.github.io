@@ -1,0 +1,247 @@
+---
+import { Image } from "astro:assets"
+import { getCollection } from "astro:content"
+import { CATEGORIES } from "../content.config"
+import order from "../data/features.yaml?raw"
+
+// keep the YAML's order (the collection itself is unordered)
+const ids = [...order.matchAll(/^- id:\s*(\S+)/gm)].map((m) => m[1])
+const features = (await getCollection("features")).sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id))
+const used = Object.entries(CATEGORIES).filter(([key]) => features.some((f) => f.data.category === key))
+---
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="head">
+      <div>
+        <p class="kicker">Features</p>
+        <h2>What works today</h2>
+        <p class="lead">
+          Logins with real accounts, the worlds and dungeons with their enemies, combat, the minifigure
+          collection, loot, friends, teams and multiplayer, and the tools to run it all.
+        </p>
+      </div>
+      <div class="filters" role="group" aria-label="Filter features">
+        <button type="button" data-filter="all" aria-pressed="true">All <span>{features.length}</span></button>
+        {
+          used.map(([key, label]) => (
+            <button type="button" data-filter={key} data-cat={key} aria-pressed="false">
+              {label} <span>{features.filter((f) => f.data.category === key).length}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <ul class="grid">
+      {
+        features.map(({ id, data }) => (
+          <li class:list={["card", { wide: data.wide }]} id={`feature-${id}`} data-cat={data.category}>
+            <div class="media">
+              <Image
+                src={data.image}
+                alt={data.alt}
+                widths={data.wide ? [600, 900, 1200] : [400, 600, 800]}
+                sizes={data.wide ? "(max-width: 700px) 100vw, (max-width: 1100px) 100vw, 780px" : "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 380px"}
+              />
+            </div>
+            <div class="body">
+              <span class="tag mono">{CATEGORIES[data.category]}</span>
+              <h3>{data.title}</h3>
+              <p>{data.description}</p>
+              {data.link && (
+                <a class="more" href={data.link.href}>
+                  {data.link.label} <span aria-hidden="true">→</span>
+                </a>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>("#features [data-filter]")
+  const cards = document.querySelectorAll<HTMLElement>("#features .card")
+  for (const button of buttons) {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.filter
+      for (const b of buttons) b.setAttribute("aria-pressed", String(b === button))
+      for (const card of cards) card.hidden = filter !== "all" && card.dataset.cat !== filter
+    })
+  }
+</script>
+
+<style>
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 40px;
+    margin-bottom: 40px;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .filters button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-muted);
+    font: 500 13.5px var(--font-sans);
+    cursor: pointer;
+    transition:
+      color 0.15s,
+      background 0.15s,
+      border-color 0.15s;
+  }
+  .filters button span {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-faint);
+  }
+  .filters button:hover {
+    color: var(--text);
+    background: var(--panel);
+  }
+  .filters button[aria-pressed="true"] {
+    color: #17130a;
+    background: var(--yellow);
+    border-color: var(--yellow);
+  }
+  .filters button[aria-pressed="true"] span {
+    color: rgba(23, 19, 10, 0.6);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-flow: dense;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .card {
+    --accent: var(--yellow);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    overflow: hidden;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+  .card[hidden] {
+    display: none;
+  }
+  .card:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+  }
+  .card.wide {
+    grid-column: span 2;
+  }
+  [data-cat="server"] {
+    --accent: var(--blue);
+  }
+  [data-cat="webui"] {
+    --accent: var(--green);
+  }
+  [data-cat="patcher"] {
+    --accent: var(--red);
+  }
+  [data-cat="tooling"] {
+    --accent: var(--violet);
+  }
+  .media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .wide .media {
+    aspect-ratio: 32 / 10.4;
+  }
+  .media::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.85;
+  }
+  .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.4s;
+  }
+  .card:hover .media img {
+    transform: scale(1.025);
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 20px 22px;
+  }
+  .tag {
+    color: var(--accent);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  h3 {
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .body p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14.5px;
+    text-wrap: pretty;
+  }
+  .more {
+    margin-top: 4px;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 550;
+    text-decoration: none;
+  }
+  .more:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 1100px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 700px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .card.wide {
+      grid-column: auto;
+    }
+    .wide .media {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

@@ -1,0 +1,162 @@
+# Features shown on the home page, in this order.
+#
+#   id:          unique, used as the card's anchor (#feature-<id>)
+#   title:       a few words
+#   category:    game | server | webui | patcher | tooling (sets the filter tab and the colour)
+#   description: one or two sentences
+#   image:       path relative to this file (PNG, JPG or WebP; Astro optimizes it at build time)
+#   alt:         what the image shows, for screen readers
+#   wide:        optional, true makes the card span two columns
+#   link:        optional, { label, href } shown under the description
+
+- id: worlds
+  title: The worlds are back
+  category: game
+  description: >-
+    LEGO Center, the starting worlds and every dungeon load with their enemies, smashables,
+    buildies and portals, from data extracted from the shipped client.
+  image: ./images/enchanted-forest.jpg
+  alt: A minifigure on the icy cliffs of the Enchanted Forest
+  wide: true
+
+- id: combat
+  title: Combat and abilities
+  category: game
+  description: >-
+    Attacks, specials and channelled abilities run the client's own spell action lists. Enemies
+    pick spells, keep their distance, chase and leash; bosses have arenas.
+  image: ./images/combat.jpg
+  alt: Fighting enemies in LEGO Center with health bars over their heads
+
+- id: minifigures
+  title: Minifigures and the team
+  category: game
+  description: >-
+    Collect minifigures, swap the team of three, rank them up with stars and buy upgrades in the
+    Item Shop. Optional progression from level 1, or everyone at level 30.
+  image: ./images/first-minifigure.jpg
+  alt: A newly unlocked minifigure in LEGO Center
+
+- id: multiplayer
+  title: Multiplayer, friends and teams
+  category: game
+  description: >-
+    See other players move in real time, add friends with friend codes, and form teams with a
+    shared map and team chat.
+  image: ./images/remote-astronaut.png
+  alt: Another player's astronaut seen from a second client
+
+- id: chat
+  title: Chat channels and tells
+  category: game
+  description: >-
+    Local, channel and private chat, with server lines from "Server". GMs type ! commands into
+    the chat to teleport, spawn test fights and solve puzzles.
+  image: ./images/chat.png
+  alt: General chat with a message from another player and a reply
+
+- id: dungeons
+  title: Dungeons, bosses and loot
+  category: game
+  description: >-
+    Ambushes, champion spots and boss arenas from the client's own area data, with loot drops,
+    achievements and the lore tree.
+  image: ./images/pirate-world.jpg
+  alt: A pirate island with treasure and enemies
+
+- id: puzzles
+  title: Gates, plates and mirrors
+  category: game
+  description: >-
+    Light gates, pressure plates and Medusa mirror puzzles open the way through the Armory and
+    the Gauntlet.
+  image: ./images/lego-center-plaza.jpg
+  alt: The paved plaza of LEGO Center with its yellow star pattern
+  wide: true
+
+- id: native-linux
+  title: The native Linux client
+  category: server
+  description: >-
+    The 2016 Linux build runs again with a small patch kit; the Windows client runs under Wine
+    or Proton. Both connect to the same server.
+  image: ./images/native-linux-client.jpg
+  alt: The carnival corner of LEGO Center in the native Linux client
+  wide: true
+
+- id: webui-console
+  title: Web console for staff
+  category: webui
+  description: >-
+    Accounts, characters, bans and kicks, broadcasts, maintenance mode, API keys and an audit
+    log of every administrative action, scoped by GM level.
+  image: ./images/webui-accounts.png
+  alt: The accounts list of the web console, with admin, moderator and banned badges
+  wide: true
+  link:
+    label: REST API reference
+    href: https://github.com/LMOxide/lmoxide/blob/main/docs/API.md
+
+- id: webui-characters
+  title: Characters in detail
+  category: webui
+  description: >-
+    Every character's location, level, team, minifigure ranks and upgrades, and the tokens they
+    have gained and spent.
+  image: ./images/webui-character.png
+  alt: A character page listing the team, ranks, upgrades and tokens
+
+- id: webui-moderation
+  title: Moderation
+  category: webui
+  description: >-
+    Timed bans with reasons, kicks, password resets and account edits. Moderators can ban
+    players; only admins can touch staff.
+  image: ./images/webui-moderation.png
+  alt: A banned account with Kick, Unban, Edit, Password and Delete buttons
+
+- id: webui-audit
+  title: Audit log
+  category: webui
+  description: >-
+    Who did what, to whom and why: logins, bans, broadcasts, API keys and account changes,
+    newest first.
+  image: ./images/webui-audit.png
+  alt: The audit log listing logins, bans and broadcasts
+
+- id: patcher
+  title: One-click patcher
+  category: patcher
+  description: >-
+    Install, update, verify and repair the client from any LMOxide server, then start it already
+    logged in. Profiles for several servers, accounts and Wine setups.
+  image: ./images/patcher-ready.png
+  alt: The patcher window showing Ready to play
+
+- id: patcher-trust
+  title: Signed manifests
+  category: patcher
+  description: >-
+    Every file is checked against an ed25519-signed manifest. The patcher asks before trusting a
+    new server and warns if its key ever changes.
+  image: ./images/patcher-trust.png
+  alt: The patcher asking whether to trust a server's signing key
+
+- id: patcher-updates
+  title: Incremental updates
+  category: patcher
+  description: >-
+    Only files that differ are downloaded, in parallel, and interrupted downloads resume. The
+    patcher updates itself from the same server.
+  image: ./images/patcher-install.png
+  alt: The patcher before a first install, with the download size
+
+- id: test-bots
+  title: Scripted test runs
+  category: tooling
+  description: >-
+    The server can drive a client through test commands, screenshot tours of every boss or
+    buildie, and headless login probes, so changes are checked in the real game.
+  image: ./images/bot-moving.png
+  alt: Three frames of a character walking on its own
+  wide: true

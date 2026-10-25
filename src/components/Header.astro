@@ -1,0 +1,98 @@
+---
+import { Image } from "astro:assets"
+import logo from "../data/logo.png"
+import { site } from "../data/site"
+
+const links = [
+  ["Features", "#features"],
+  ["Architecture", "#architecture"],
+  ["Components", "#components"],
+  ["Get started", "#get-started"],
+]
+---
+
+<header class="header">
+  <div class="container bar">
+    <a class="brand" href="#top" aria-label="LMOxide, back to top">
+      <Image src={logo} alt="" width={32} height={32} loading="eager" />
+      <span>{site.name}</span>
+    </a>
+    <nav aria-label="Sections">
+      {links.map(([label, href]) => <a href={href}>{label}</a>)}
+    </nav>
+    <a class="gh" href={site.github} aria-label="LMOxide on GitHub">
+      <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+        ></path>
+      </svg>
+      <span>GitHub</span>
+    </a>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(140%) blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: 60px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 650;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+  .brand img {
+    width: 30px;
+    height: 30px;
+  }
+  nav {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+  }
+  nav a,
+  .gh {
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-size: 14px;
+    text-decoration: none;
+    transition:
+      color 0.15s,
+      background 0.15s;
+  }
+  nav a:hover,
+  .gh:hover {
+    color: var(--text);
+    background: var(--panel);
+  }
+  .gh {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--line-strong);
+  }
+  @media (max-width: 760px) {
+    nav {
+      display: none;
+    }
+    .gh {
+      margin-left: auto;
+    }
+  }
+</style>

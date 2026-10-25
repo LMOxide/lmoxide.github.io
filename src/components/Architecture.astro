@@ -1,0 +1,275 @@
+---
+import { site } from "../data/site"
+
+const ports = [
+  ["7100", "universe agent", "game"],
+  ["7101", "territory manager", "game"],
+  ["7102", "game server", "game"],
+  ["7200", "chat server", "game"],
+  ["8080", "patch server", "http"],
+  ["8090", "REST API", "http"],
+  ["7300", "control, private", "private"],
+]
+---
+
+<section class="section" id="architecture">
+  <div class="container">
+    <p class="kicker">Architecture</p>
+    <h2>How it fits together</h2>
+    <p class="lead">
+      Three Rust services; the game server and the API share one SQLite database. The client talks
+      to them the way it talked to Funcom's servers: everything it expects was reverse-engineered
+      from the binary and a recorded session.
+    </p>
+
+    <div class="diagram-wrap">
+      <svg class="diagram" viewBox="0 0 1000 400" role="img" aria-labelledby="arch-title arch-desc">
+        <title id="arch-title">LMOxide architecture</title>
+        <desc id="arch-desc">
+          The game client connects to lmoxide-server over TCP ports 7100 to 7102 and 7200, and to
+          lmoxide-patch-server over HTTP port 8080. The LMOxide patcher downloads signed manifests from
+          the patch server and installs and starts the client. lmoxide-api serves the web UI and bots on
+          port 8090 and controls the game server over a private port 7300. The game server and the API
+          share a SQLite database.
+        </desc>
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" class="head"></path>
+          </marker>
+        </defs>
+
+        <!-- edges -->
+        <g class="edges" marker-end="url(#arrow)">
+          <path d="M240 92H388"></path>
+          <path d="M240 132H300V318H388"></path>
+          <path d="M240 345H388"></path>
+          <path d="M760 78H632"></path>
+          <path d="M870 288V152"></path>
+          <path class="dash" d="M120 288V152"></path>
+        </g>
+        <g class="edges">
+          <path d="M510 170V198"></path>
+          <path d="M760 128H700V225H582"></path>
+        </g>
+
+        <!-- edge labels -->
+        <g class="elabel">
+          <text x="314" y="82" text-anchor="middle">TCP</text>
+          <text x="308" y="236">HTTP :8080</text>
+          <text x="314" y="335" text-anchor="middle">manifests</text>
+          <text x="696" y="68" text-anchor="middle">control :7300</text>
+          <text x="882" y="226">HTTPS</text>
+          <text x="132" y="226">installs, starts</text>
+        </g>
+
+        <!-- nodes -->
+        <g class="node">
+          <rect x="20" y="40" width="220" height="112" rx="10"></rect>
+          <text class="t" x="40" y="76">Game client</text>
+          <text class="s" x="40" y="102">LEGO Minifigures Online</text>
+          <text class="s" x="40" y="124">Windows · native Linux</text>
+        </g>
+        <g class="node">
+          <rect x="20" y="288" width="220" height="92" rx="10"></rect>
+          <text class="t" x="40" y="324">LMOxide patcher</text>
+          <text class="s" x="40" y="350">egui GUI · CLI</text>
+        </g>
+        <g class="node core">
+          <rect x="390" y="20" width="242" height="150" rx="10"></rect>
+          <text class="t" x="410" y="54">lmoxide-server</text>
+          <text class="p" x="410" y="84">:7100 universe</text>
+          <text class="p" x="410" y="106">:7101 territory</text>
+          <text class="p" x="410" y="128">:7102 game</text>
+          <text class="p" x="410" y="150">:7200 chat</text>
+        </g>
+        <g class="node db">
+          <rect x="438" y="200" width="144" height="52" rx="10"></rect>
+          <text class="t sm" x="510" y="224" text-anchor="middle">SQLite</text>
+          <text class="s" x="510" y="243" text-anchor="middle">lmoxide.db</text>
+        </g>
+        <g class="node core">
+          <rect x="390" y="288" width="242" height="92" rx="10"></rect>
+          <text class="t" x="410" y="324">lmoxide-patch-server</text>
+          <text class="p" x="410" y="350">:8080 config · patches</text>
+        </g>
+        <g class="node core">
+          <rect x="760" y="40" width="220" height="112" rx="10"></rect>
+          <text class="t" x="780" y="76">lmoxide-api</text>
+          <text class="p" x="780" y="102">:8090 REST · OpenAPI</text>
+          <text class="s" x="780" y="124">scoped tokens · audit</text>
+        </g>
+        <g class="node">
+          <rect x="760" y="288" width="220" height="92" rx="10"></rect>
+          <text class="t" x="780" y="324">Web UI · bots</text>
+          <text class="s" x="780" y="350">React console · scripts</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="notes">
+      <article>
+        <h3><span class="mono">01</span> Protocol</h3>
+        <p>
+          TCP framing, the BinaryStream argument encoding, the client's 840 RPC methods and the IIR state
+          updates, worked out from the client binary, its protobuf schemas and Ghidra.
+        </p>
+        <a href={site.docs.protocol}>Protocol notes →</a>
+      </article>
+      <article>
+        <h3><span class="mono">02</span> Security</h3>
+        <p>
+          Passwords travel encrypted with the client's Diffie-Hellman/TEA scheme against the server's own
+          login key, which the patch server writes into every client it hands out. Game traffic itself
+          can't be encrypted: a client limitation.
+        </p>
+        <a href={site.docs.security}>Security model →</a>
+      </article>
+      <article>
+        <h3><span class="mono">03</span> Ports</h3>
+        <ul class="ports">
+          {
+            ports.map(([port, what, kind]) => (
+              <li data-kind={kind}>
+                <code>{port}</code>
+                <span>{what}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .diagram-wrap {
+    margin-top: 40px;
+    padding: clamp(12px, 3vw, 32px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background:
+      radial-gradient(circle, var(--line) 1px, transparent 1.2px) 0 0 / 22px 22px,
+      var(--bg-raised);
+    overflow-x: auto;
+  }
+  .diagram {
+    display: block;
+    width: 100%;
+    min-width: 680px;
+    height: auto;
+    font-family: var(--font-mono);
+  }
+  .node rect {
+    fill: var(--panel);
+    stroke: var(--line-strong);
+    stroke-width: 1.2;
+  }
+  .node.core rect {
+    stroke: color-mix(in srgb, var(--yellow) 55%, var(--line-strong));
+  }
+  .node.db rect {
+    fill: #0d1a2b;
+    stroke: color-mix(in srgb, var(--blue) 60%, var(--line-strong));
+  }
+  .t {
+    fill: var(--text);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .t.sm {
+    font-size: 15px;
+  }
+  .s {
+    fill: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+  }
+  .p {
+    fill: var(--yellow);
+    font-size: 13px;
+  }
+  .edges path {
+    fill: none;
+    stroke: #4b5a6e;
+    stroke-width: 1.6;
+  }
+  .edges path.dash {
+    stroke-dasharray: 5 5;
+  }
+  .head {
+    fill: #4b5a6e;
+  }
+  .elabel text {
+    fill: var(--text-faint);
+    font-size: 12px;
+  }
+
+  .notes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .notes article {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+  }
+  .notes h3 {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 17px;
+  }
+  .notes h3 span {
+    color: var(--yellow);
+    font-size: 12px;
+  }
+  .notes p {
+    margin: 10px 0 14px;
+    color: var(--text-muted);
+    font-size: 14.5px;
+  }
+  .notes a {
+    color: var(--yellow);
+    font-size: 14px;
+    font-weight: 550;
+    text-decoration: none;
+  }
+  .notes a:hover {
+    text-decoration: underline;
+  }
+  .ports {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+  }
+  .ports li {
+    display: flex;
+    gap: 14px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--line);
+    color: var(--text-muted);
+  }
+  .ports li:last-child {
+    border-bottom: 0;
+  }
+  .ports code {
+    width: 44px;
+    color: var(--yellow);
+  }
+  .ports [data-kind="http"] code {
+    color: var(--blue);
+  }
+  .ports [data-kind="private"] code {
+    color: var(--red);
+  }
+  @media (max-width: 900px) {
+    .notes {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

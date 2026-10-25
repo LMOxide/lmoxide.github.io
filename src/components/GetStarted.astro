@@ -1,0 +1,231 @@
+---
+import { site } from "../data/site"
+
+const tabs = [
+  {
+    id: "docker",
+    label: "Host with Docker",
+    note: "Runs the game server, the API and the patch server from one image, with the database in a volume. Bring your own copy of the client.",
+    code: `cp docker/.env.example .env          # set LMOXIDE_PUBLIC_HOST, client paths
+mkdir -p secrets && openssl rand -hex 32 > secrets/control_token
+docker compose up -d --build
+
+# an admin account, and a read-only key for a bot
+docker compose exec server lmoxide-server account create <you> --gm-level 2
+docker compose exec api lmoxide-api key create discord-bot --scope read`,
+  },
+  {
+    id: "play",
+    label: "Play on a server",
+    note: "Install the client from a server's patch server, then start it. The desktop patcher does the same with a window, profiles and automatic login.",
+    code: `lmoxide-patcher install --server http://<host>:8080 --dir ~/Games/LMO
+lmoxide-patcher verify  --server http://<host>:8080 --dir ~/Games/LMO
+
+# or the desktop patcher
+cargo build --release          # in lmoxide-patcher-gui
+./target/release/lmoxide-patcher-gui`,
+  },
+  {
+    id: "source",
+    label: "Run from source",
+    note: "Needs Rust, protoc and an extracted client. --progression starts characters at level 1; without it everyone is level 30 with every minifigure.",
+    code: `cargo run -p lmoxide-server -- account create <name> --gm-level 2
+
+# LAN play: game server + patch server + API on this PC's address
+tools/lan-server.sh --release
+
+# development: servers + a Wine client, a summary and a screenshot
+LMO_AUTOPLAY=1 tools/test-run.sh 60`,
+  },
+]
+---
+
+<section class="section" id="get-started">
+  <div class="container">
+    <p class="kicker">Get started</p>
+    <h2>Run a server, or join one</h2>
+    <p class="lead">
+      LMOxide ships no game files. You need your own copy of the LEGO Minifigures Online client,
+      Windows or Linux build.
+    </p>
+
+    <div class="tabs">
+      <div class="tablist" role="tablist" aria-label="Ways to start">
+        {
+          tabs.map((t, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${t.id}`}
+              aria-controls={`panel-${t.id}`}
+              aria-selected={i === 0 ? "true" : "false"}
+              tabindex={i === 0 ? 0 : -1}
+            >
+              {t.label}
+            </button>
+          ))
+        }
+      </div>
+      {
+        tabs.map((t, i) => (
+          <div class="panel" role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} hidden={i !== 0}>
+            <p>{t.note}</p>
+            <div class="code">
+              <div class="codebar">
+                <span class="mono">bash</span>
+                <button type="button" class="copy" data-copy={t.code}>
+                  Copy
+                </button>
+              </div>
+              <pre><code>{t.code}</code></pre>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <ul class="links">
+      <li><a href={site.docs.patching}>Patching and the patch server</a></li>
+      <li><a href={site.docs.api}>REST API</a></li>
+      <li><a href={site.docs.tunables}>What is guessed (tunables)</a></li>
+      <li><a href={site.docs.security}>Deployment checklist</a></li>
+    </ul>
+  </div>
+</section>
+
+<script>
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>("#get-started [role=tab]")]
+  function select(tab: HTMLButtonElement) {
+    for (const t of tabs) {
+      const on = t === tab
+      t.setAttribute("aria-selected", String(on))
+      t.tabIndex = on ? 0 : -1
+      document.getElementById(t.getAttribute("aria-controls")!)!.hidden = !on
+    }
+    tab.focus()
+  }
+  tabs.forEach((tab, i) => {
+    tab.addEventListener("click", () => select(tab))
+    tab.addEventListener("keydown", (e) => {
+      const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0
+      if (step) select(tabs[(i + step + tabs.length) % tabs.length])
+    })
+  })
+  for (const button of document.querySelectorAll<HTMLButtonElement>("#get-started .copy")) {
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? "")
+        button.textContent = "Copied"
+      } catch {
+        button.textContent = "Select and copy"
+      }
+      setTimeout(() => (button.textContent = "Copy"), 1600)
+    })
+  }
+</script>
+
+<style>
+  .tabs {
+    margin-top: 36px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    overflow: hidden;
+  }
+  .tablist {
+    display: flex;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+  }
+  [role="tab"] {
+    position: relative;
+    padding: 14px 20px;
+    border: 0;
+    background: none;
+    color: var(--text-muted);
+    font: 550 14.5px var(--font-sans);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  [role="tab"]:hover {
+    color: var(--text);
+  }
+  [role="tab"][aria-selected="true"] {
+    color: var(--text);
+  }
+  [role="tab"][aria-selected="true"]::after {
+    content: "";
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: -1px;
+    height: 2px;
+    background: var(--yellow);
+  }
+  .panel {
+    padding: 20px;
+  }
+  .panel > p {
+    margin: 0 0 16px;
+    max-width: 75ch;
+    color: var(--text-muted);
+    font-size: 14.5px;
+  }
+  .code {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #07090c;
+    overflow: hidden;
+  }
+  .codebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 36px;
+    padding: 0 8px 0 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--text-faint);
+    font-size: 12px;
+  }
+  .copy {
+    height: 26px;
+    padding: 0 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--text-muted);
+    font: 500 12px var(--font-sans);
+    cursor: pointer;
+  }
+  .copy:hover {
+    color: var(--text);
+  }
+  pre {
+    margin: 0;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #cdd5e2;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .links a {
+    color: var(--text-muted);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .links a::before {
+    content: "↗ ";
+    color: var(--yellow);
+  }
+  .links a:hover {
+    color: var(--text);
+  }
+</style>

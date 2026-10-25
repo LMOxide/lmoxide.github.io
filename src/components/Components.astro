@@ -1,0 +1,175 @@
+---
+import { site } from "../data/site"
+
+const components = [
+  {
+    name: "lmoxide",
+    role: "Server",
+    accent: "var(--yellow)",
+    summary:
+      "The game server (universe agent, territory manager, game and chat servers), the REST API, the patch server and a command-line patcher, in one Cargo workspace.",
+    stack: ["Rust", "Tokio", "SQLite", "protobuf", "Docker"],
+    parts: [
+      ["lmoxide-server", "game, chat and the control interface; account admin"],
+      ["lmoxide-api", "REST API for the web UI and bots"],
+      ["lmoxide-patch-server", "the client's HTTP, signed manifests"],
+      ["lmoxide-net", "wire protocol and login encryption"],
+      ["lmoxide-db", "accounts, characters, friendships, audit log"],
+    ],
+    href: site.repos.server,
+  },
+  {
+    name: "lmoxide-webui",
+    role: "Web UI",
+    accent: "var(--green)",
+    summary:
+      "A static single-page app for players and staff: server status, registration, your own account, and the moderation and admin console.",
+    stack: ["React 19", "TypeScript", "Vite", "Tailwind 4", "shadcn/ui", "TanStack Query"],
+    parts: [
+      ["openapi-fetch", "client typed from the API's OpenAPI schema"],
+      ["scopes", "read, moderate and admin, from the GM level"],
+      ["deploy", "static files behind the API's reverse proxy"],
+    ],
+    href: site.repos.webui,
+  },
+  {
+    name: "lmoxide-patcher-gui",
+    role: "Patcher",
+    accent: "var(--red)",
+    summary:
+      "A native desktop launcher: install, update, verify and repair the client from any LMOxide server, then play with automatic login.",
+    stack: ["Rust", "egui", "OpenGL", "keyring"],
+    parts: [
+      ["lmoxide-patch", "the same library as the CLI patcher"],
+      ["profiles", "servers, accounts, Wine and Proton setups"],
+      ["self-update", "signed builds from the patch server"],
+    ],
+    href: site.repos.patcher,
+  },
+]
+---
+
+<section class="section" id="components">
+  <div class="container">
+    <p class="kicker">Components</p>
+    <h2>Three repositories, one server</h2>
+    <p class="lead">
+      The server is a Rust workspace. The web UI and the patcher live in their own repositories and
+      talk to it only through its public interfaces.
+    </p>
+
+    <div class="cards">
+      {
+        components.map((c) => (
+          <article style={`--accent: ${c.accent}`}>
+            <header>
+              <span class="role mono">{c.role}</span>
+              <h3 class="mono">{c.name}</h3>
+            </header>
+            <p class="summary">{c.summary}</p>
+            <ul class="stack">
+              {c.stack.map((s) => (
+                <li class="chip">{s}</li>
+              ))}
+            </ul>
+            <dl>
+              {c.parts.map(([k, v]) => (
+                <div>
+                  <dt class="mono">{k}</dt>
+                  <dd>{v}</dd>
+                </div>
+              ))}
+            </dl>
+            <a class="repo" href={c.href}>
+              github.com/LMOxide/{c.name} <span aria-hidden="true">→</span>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 40px;
+  }
+  article {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 26px 24px 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    overflow: hidden;
+  }
+  article::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: var(--accent);
+  }
+  .role {
+    color: var(--accent);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  h3 {
+    margin-top: 6px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .summary {
+    margin: 12px 0 16px;
+    color: var(--text-muted);
+    font-size: 14.5px;
+  }
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 18px;
+    padding: 0;
+    list-style: none;
+  }
+  dl {
+    margin: 0 0 20px;
+    border-top: 1px solid var(--line);
+  }
+  dl div {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  dt {
+    color: var(--text);
+    font-size: 13px;
+  }
+  dd {
+    margin: 2px 0 0;
+    color: var(--text-muted);
+    font-size: 13.5px;
+  }
+  .repo {
+    margin-top: auto;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .repo:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 960px) {
+    .cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

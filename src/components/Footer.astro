@@ -1,0 +1,60 @@
+---
+import { site } from "../data/site"
+---
+
+<footer>
+  <div class="stripe" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="container inner">
+    <div>
+      <p class="name">{site.name}</p>
+      <p class="fine">
+        A fan project, not affiliated with or endorsed by the LEGO Group or Funcom. LEGO and LEGO
+        Minifigures are trademarks of the LEGO Group. No game files are distributed here.
+      </p>
+    </div>
+    <nav aria-label="Repositories">
+      <a href={site.repos.server}>lmoxide</a>
+      <a href={site.repos.webui}>lmoxide-webui</a>
+      <a href={site.repos.patcher}>lmoxide-patcher-gui</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  footer {
+    margin-top: 0;
+    background: var(--bg-raised);
+  }
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 36px;
+    padding-bottom: 44px;
+  }
+  .name {
+    margin: 0;
+    font-weight: 650;
+  }
+  .fine {
+    max-width: 60ch;
+    margin: 8px 0 0;
+    color: var(--text-faint);
+    font-size: 13px;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  nav a:hover {
+    color: var(--yellow);
+  }
+</style>
