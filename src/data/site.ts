@@ -11,7 +11,7 @@ export const site = {
   repos: {
     server: `${org}/lmoxide`,
     webui: `${org}/lmoxide-webui`,
-    patcher: `${org}/lmoxide-patcher-gui`,
+    patcher: `${org}/lmoxide-patcher`,
   },
   docs: {
     protocol: `${org}/lmoxide/blob/main/docs/PROTOCOL.md`,
