@@ -13,6 +13,11 @@ export const site = {
     webui: `${org}/lmoxide-webui`,
     patcher: `${org}/lmoxide-patcher`,
   },
+  downloads: {
+    // the GUI patcher's builds (Windows, Linux, macOS), from its release workflow
+    patcher: `${org}/lmoxide-patcher/releases/latest`,
+    server: `${org}/lmoxide/releases/latest`,
+  },
   docs: {
     hosting: `${org}/lmoxide/blob/main/docs/HOSTING.md`,
     protocol: `${org}/lmoxide/blob/main/docs/PROTOCOL.md`,

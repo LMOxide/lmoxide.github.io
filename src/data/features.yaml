@@ -194,6 +194,9 @@
     logged in. Profiles for several servers, accounts and Wine setups.
   image: ./images/patcher-ready.png
   alt: The patcher window showing Ready to play
+  link:
+    label: Download (Windows, Linux, macOS)
+    href: https://github.com/LMOxide/lmoxide-patcher/releases/latest
 
 - id: patcher-trust
   title: Signed manifests

@@ -12,14 +12,15 @@ cp docker/lmoxide.example.toml docker/lmoxide.toml   # server options
 docker compose up -d
 
 # your admin account
-docker compose exec lmoxide lmoxide game account create <you> --gm-level 2`,
+docker compose exec lmoxide lmoxide game account create <you> --gm-level 4`,
   },
   {
     id: "play",
     label: "Play on a server",
     note: "Download the desktop patcher (Windows, Linux, macOS) and point it at a server: it installs the client from the server's patch server, keeps it up to date and starts it logged in. The command-line patcher does the same without a window.",
+    link: { label: "Download the patcher", href: site.downloads.patcher },
     code: `# the desktop patcher: download it from
-# https://github.com/LMOxide/lmoxide-patcher/releases
+# ${site.downloads.patcher}
 
 # or the command-line patcher (lmoxide's releases)
 lmoxide-patcher install --server https://<host> --dir ~/Games/LMO
@@ -28,8 +29,8 @@ lmoxide-patcher verify  --server https://<host> --dir ~/Games/LMO`,
   {
     id: "source",
     label: "Run from source",
-    note: "Needs Rust, protoc and an extracted client. --progression starts characters at level 1; without it everyone is level 30 with every minifigure.",
-    code: `cargo run -p lmoxide-server -- account create <name> --gm-level 2
+    note: "Needs Rust, protoc and an extracted client. Characters start at level 1 (progression, the default); the Maxxed mode has everyone at level 30 with every minifigure.",
+    code: `cargo run -p lmoxide-server -- account create <name> --gm-level 4
 
 # LAN play: game server + patch server + API on this PC's address
 tools/lan-server.sh --release
@@ -70,6 +71,13 @@ LMO_AUTOPLAY=1 tools/test-run.sh 60`,
         tabs.map((t, i) => (
           <div class="panel" role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} hidden={i !== 0}>
             <p>{t.note}</p>
+            {t.link && (
+              <p>
+                <a class="btn btn-primary" href={t.link.href}>
+                  {t.link.label}
+                </a>
+              </p>
+            )}
             <div class="code">
               <div class="codebar">
                 <span class="mono">bash</span>
