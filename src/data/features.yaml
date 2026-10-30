@@ -37,14 +37,78 @@
   image: ./images/first-minifigure.jpg
   alt: A newly unlocked minifigure in LEGO Center
 
-- id: multiplayer
-  title: Multiplayer, friends and teams
+- id: upgrades
+  title: Upgrades
   category: game
   description: >-
-    See other players move in real time, add friends with friend codes, and form teams with a
-    shared map and team chat.
-  image: ./images/remote-astronaut.png
-  alt: Another player's astronaut seen from a second client
+    Spend stars on each minifigure's upgrade tree in the Collection: more health, faster
+    attacks, and procs such as Lionhearted after a special attack.
+  image: ./images/upgrades.jpg
+  alt: The Roman Commander's upgrade tree with the Lionhearted upgrade for 150 stars
+
+- id: multiplayer
+  title: Multiplayer
+  category: game
+  description: >-
+    Play together on one server: see other players move and fight in real time, in the same
+    worlds or in copies of their own.
+  image: ./images/multiplayer.jpg
+  alt: Two players fighting a pack of enemies together on the Isle of Yarr
+
+- id: friends
+  title: Friends
+  category: game
+  description: >-
+    Add friends from the Team List or with friend codes, accept invitations, and see who is
+    online.
+  image: ./images/friend-accept.jpg
+  alt: An invitation from Fantastic Sparky Burrito to be friends, with No and Yes buttons
+
+- id: teams
+  title: Teams
+  category: game
+  description: >-
+    Invite friends to a team: teammates share kills, smashes and pocket world clears, and see
+    each other on the map.
+  image: ./images/join-teams.jpg
+  alt: The message "You joined a group" after inviting a friend to a team
+
+- id: dialogues
+  title: Story and dialogues
+  category: game
+  description: >-
+    The characters talk again: story conversations, cinematics and quest lines, with the
+    recorded texts of the live game.
+  image: ./images/dialogues.jpg
+  alt: The Jester asking the player to deliver the stolen crown
+
+- id: area-quests
+  title: Area quests
+  category: game
+  description: >-
+    Each world's quests show in the tracker: rescue minifigures, travel, collect airplane parts
+    and test your mettle in the Gauntlet.
+  image: ./images/area-quests.jpg
+  alt: The quest tracker in Dinosaur Rise listing four quests next to a fight
+
+- id: achievements
+  title: Achievements
+  category: game
+  description: >-
+    Defeats, clears, finds and collections earn achievements, with the live game's pop-ups, the
+    achievement journal and the lore tree.
+  image: ./images/achievements.jpg
+  alt: The Quest Completed pop-up for Battle Mech, the Lost Challenger
+
+- id: lost-creations
+  title: Lost Creations
+  category: game
+  description: >-
+    Timed runs through the Lost Creations levels in the Gatekeeper's Realm, up to the Gatekeeper
+    himself.
+  image: ./images/lost-creations.jpg
+  alt: Fighting the Gatekeeper in his arena with the level timer showing 04:53
+  wide: true
 
 - id: chat
   title: Chat channels and tells
@@ -70,8 +134,8 @@
   description: >-
     Light gates, pressure plates and Medusa mirror puzzles open the way through the Armory and
     the Gauntlet.
-  image: ./images/lego-center-plaza.jpg
-  alt: The paved plaza of LEGO Center with its yellow star pattern
+  image: ./images/puzzles.jpg
+  alt: Beams of light crossing the Armory's floor between mirrors
   wide: true
 
 - id: native-linux
