@@ -123,8 +123,8 @@
   description: >-
     Ambushes, champion spots and boss arenas from the client's own area data, with loot drops,
     achievements and the lore tree.
-  image: ./images/pirate-world.jpg
-  alt: A pirate island with treasure and enemies
+  image: ./images/dungeon-loot.jpg
+  alt: Treasure chests in Space Command HQ, one dropping Carpenter Legs
 
 - id: puzzles
   title: Gates, plates and mirrors
