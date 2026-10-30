@@ -5,25 +5,25 @@ const tabs = [
   {
     id: "docker",
     label: "Host with Docker",
-    note: "Runs the game server, the API and the patch server from one image, with the database in a volume. Bring your own copy of the client.",
-    code: `cp docker/.env.example .env          # set LMOXIDE_PUBLIC_HOST, client paths
-mkdir -p secrets && openssl rand -hex 32 > secrets/control_token
-docker compose up -d --build
+    note: "Runs the published images: the game server, API and patch server in one process, Caddy for HTTPS, the web UI and the dev UI, and optionally the Discord bot. No Rust or Node needed. Bring your own copy of the client.",
+    code: `git clone https://github.com/LMOxide/lmoxide.git && cd lmoxide
+cp docker/.env.example .env                          # host name, client folders
+cp docker/lmoxide.example.toml docker/lmoxide.toml   # server options
+docker compose up -d
 
-# an admin account, and a read-only key for a bot
-docker compose exec server lmoxide-server account create <you> --gm-level 2
-docker compose exec api lmoxide-api key create discord-bot --scope read`,
+# your admin account
+docker compose exec lmoxide lmoxide game account create <you> --gm-level 2`,
   },
   {
     id: "play",
     label: "Play on a server",
-    note: "Install the client from a server's patch server, then start it. The desktop patcher does the same with a window, profiles and automatic login.",
-    code: `lmoxide-patcher install --server http://<host>:8080 --dir ~/Games/LMO
-lmoxide-patcher verify  --server http://<host>:8080 --dir ~/Games/LMO
+    note: "Download the desktop patcher (Windows, Linux, macOS) and point it at a server: it installs the client from the server's patch server, keeps it up to date and starts it logged in. The command-line patcher does the same without a window.",
+    code: `# the desktop patcher: download it from
+# https://github.com/LMOxide/lmoxide-patcher/releases
 
-# or the desktop patcher
-cargo build --release          # in lmoxide-patcher
-./target/release/lmoxide-patcher-gui`,
+# or the command-line patcher (lmoxide's releases)
+lmoxide-patcher install --server https://<host> --dir ~/Games/LMO
+lmoxide-patcher verify  --server https://<host> --dir ~/Games/LMO`,
   },
   {
     id: "source",
@@ -85,6 +85,7 @@ LMO_AUTOPLAY=1 tools/test-run.sh 60`,
     </div>
 
     <ul class="links">
+      <li><a href={site.docs.hosting}>Hosting a server</a></li>
       <li><a href={site.docs.patching}>Patching and the patch server</a></li>
       <li><a href={site.docs.api}>REST API</a></li>
       <li><a href={site.docs.tunables}>What is guessed (tunables)</a></li>

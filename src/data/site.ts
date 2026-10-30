@@ -14,6 +14,7 @@ export const site = {
     patcher: `${org}/lmoxide-patcher`,
   },
   docs: {
+    hosting: `${org}/lmoxide/blob/main/docs/HOSTING.md`,
     protocol: `${org}/lmoxide/blob/main/docs/PROTOCOL.md`,
     api: `${org}/lmoxide/blob/main/docs/API.md`,
     patching: `${org}/lmoxide/blob/main/docs/PATCHING.md`,
