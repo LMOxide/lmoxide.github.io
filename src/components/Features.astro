@@ -37,14 +37,16 @@ const used = Object.entries(CATEGORIES).filter(([key]) => features.some((f) => f
       {
         features.map(({ id, data }) => (
           <li class:list={["card", { wide: data.wide }]} id={`feature-${id}`} data-cat={data.category}>
-            <div class="media">
-              <Image
-                src={data.image}
-                alt={data.alt}
-                widths={data.wide ? [600, 900, 1200] : [400, 600, 800]}
-                sizes={data.wide ? "(max-width: 700px) 100vw, (max-width: 1100px) 100vw, 780px" : "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 380px"}
-              />
-            </div>
+            {data.image && (
+              <div class="media">
+                <Image
+                  src={data.image}
+                  alt={data.alt ?? ""}
+                  widths={data.wide ? [600, 900, 1200] : [400, 600, 800]}
+                  sizes={data.wide ? "(max-width: 700px) 100vw, (max-width: 1100px) 100vw, 780px" : "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 380px"}
+                />
+              </div>
+            )}
             <div class="body">
               <span class="tag mono">{CATEGORIES[data.category]}</span>
               <h3>{data.title}</h3>

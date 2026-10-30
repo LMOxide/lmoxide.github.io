@@ -4,8 +4,8 @@
 #   title:       a few words
 #   category:    game | server | webui | patcher | tooling (sets the filter tab and the colour)
 #   description: one or two sentences
-#   image:       path relative to this file (PNG, JPG or WebP; Astro optimizes it at build time)
-#   alt:         what the image shows, for screen readers
+#   image:       optional, path relative to this file (PNG, JPG or WebP; Astro optimizes it)
+#   alt:         what the image shows, for screen readers (with image)
 #   wide:        optional, true makes the card span two columns
 #   link:        optional, { label, href } shown under the description
 
@@ -26,7 +26,7 @@
     Attacks, specials and channelled abilities run the client's own spell action lists. Enemies
     pick spells, keep their distance, chase and leash; bosses have arenas.
   image: ./images/combat.jpg
-  alt: Fighting enemies in LEGO Center with health bars over their heads
+  alt: A special attack's burst in the middle of LEGO Center's plaza, among test enemies
 
 - id: minifigures
   title: Minifigures and the team
@@ -34,8 +34,6 @@
   description: >-
     Collect minifigures, swap the team of three, rank them up with stars and buy upgrades in the
     Item Shop. Optional progression from level 1, or everyone at level 30.
-  image: ./images/first-minifigure.jpg
-  alt: A newly unlocked minifigure in LEGO Center
 
 - id: upgrades
   title: Upgrades
