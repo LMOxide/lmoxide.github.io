@@ -46,16 +46,59 @@ const components = [
     ],
     href: site.repos.patcher,
   },
+  {
+    name: "lmoxide-dev-ui",
+    role: "Dev UI",
+    accent: "var(--cyan)",
+    summary:
+      "Tools for testers and contributors in the browser: a debugger that drives every test command on your character, and the world editor that places the game's content.",
+    stack: ["React 19", "TypeScript", "Vite", "Tailwind 4", "shadcn/ui"],
+    parts: [
+      ["debugger", "teleport, test scenarios, minifigures, looks, effects"],
+      ["world editor", "enemies, NPCs, smashables, trigger walls, scripts"],
+      ["access levels", "alpha testers on their own character, contributors everything"],
+    ],
+    href: site.repos.devui,
+  },
+  {
+    name: "lmoxide-discord-bot",
+    role: "Discord bot",
+    accent: "var(--blurple)",
+    summary:
+      "Runs a community's accounts from Discord: members register and link game accounts, roles become GM levels, and staff moderate with slash commands.",
+    stack: ["Rust", "poise", "serenity", "SQLite"],
+    parts: [
+      ["/register, /link", "accounts for members of the Discord server"],
+      ["roles", "Alpha Tester, Contributor, Admin to GM levels"],
+      ["/kick, /ban, /announce", "acting as the caller's own account"],
+    ],
+    href: site.repos.bot,
+  },
+  {
+    name: "lmoxide-content",
+    role: "Content",
+    accent: "var(--blue)",
+    summary:
+      "The game's data in one editable tree: worlds, spawns, NPCs, skills, loot, minifigures, achievements, quests and dialogues, checked and formatted by the server's tools.",
+    stack: ["JSON", "git submodule", "CI checks"],
+    parts: [
+      ["worlds", "spawns, areas, pads and triggers per playfield"],
+      ["the world editor", "publishes its changes here for review"],
+      ["lmoxide-content check", "validates every push"],
+    ],
+    href: site.repos.content,
+  },
 ]
 ---
 
 <section class="section" id="components">
   <div class="container">
     <p class="kicker">Components</p>
-    <h2>Three repositories, one server</h2>
+    <h2>Six repositories, one server</h2>
     <p class="lead">
-      The server is a Rust workspace. The web UI and the patcher live in their own repositories and
-      talk to it only through its public interfaces.
+      The server is a Rust workspace with the game's data as a submodule. The web UI, the dev UI,
+      the patcher and the Discord bot live in their own repositories and talk to it only through
+      its public interfaces.
     </p>
 
     <div class="cards">

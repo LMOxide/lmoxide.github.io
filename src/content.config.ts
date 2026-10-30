@@ -7,6 +7,8 @@ export const CATEGORIES = {
   server: "Server",
   webui: "Web UI",
   patcher: "Patcher",
+  devui: "Dev UI",
+  discord: "Discord bot",
   tooling: "Tooling",
 } as const
 

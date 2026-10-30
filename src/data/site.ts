@@ -12,6 +12,9 @@ export const site = {
     server: `${org}/lmoxide`,
     webui: `${org}/lmoxide-webui`,
     patcher: `${org}/lmoxide-patcher`,
+    devui: `${org}/lmoxide-dev-ui`,
+    bot: `${org}/lmoxide-discord-bot`,
+    content: `${org}/lmoxide-content`,
   },
   downloads: {
     // the GUI patcher's builds (Windows, Linux, macOS), from its release workflow
